@@ -31,9 +31,13 @@ class UserService extends BaseService
       'email' => $body['email'],
       'password' => $body['password']
     ];
-
+    
+    $token = null;
     try {
-      if (!$token = JWTAuth::attempt($credentials)) {
+      // cria token para autenticação
+      $token = JWTAuth::attempt($credentials);
+      if (!$token) {
+          // Retorna erro se os dados de login estiverem incorretos
           return $this->responseNotFound(trans('messages.auth.failed'));
       }
     } catch (JWTException $e) {
@@ -43,27 +47,31 @@ class UserService extends BaseService
     $user = JWTAuth::user();
     return $this->responseSuccess([
         'usuario' => $user,
-        'token' => $user->createToken("API TOKEN")->plainTextToken
+        'token' => $token
     ]);
   }
 
+  // Cria ou edita um usuário com os dados informados
   public function save($body)
   {
     try {
         DB::beginTransaction();
         $user;
 
-        // Caso seja informado um ID no body edita os dados do usuário de ID correspondente
+        // Caso seja informado um ID edita os dados do usuário correspondente
         if (isset($body['id'])) {
           $user = $this->userRepository->findOneById($body['id']);
-          if (!$usuario) {
+          if (!$user) {
               return $this->responseNotFound(trans('messages.user.not_found'));
           }
 
           $user->fill($body);
-        } else { // se não informado um ID, cadastra um novo usuário com os dados informados
+
+        } else {
+          // se não informado um ID, cadastra um novo usuário com os dados informados
+          // impede de cadastrar usuários com e-mails iguais
           $emailExiste = $this->userRepository->getByEmail($body['email']);
-          if ($emailExiste) { // impede de cadastrar usuários com e-mails iguais
+          if ($emailExiste) {
               return $this->responseNotAcceptable(trans('messages.auth.invalid_email'));
           }
 
@@ -78,5 +86,15 @@ class UserService extends BaseService
         DB::rollBack();
         return $this->responseFailure($e);
     }
+  }
+  
+  // Busca e retorna um usuário com base no ID
+  public function findOne(string $id)
+  { 
+      $user = $this->userRepository->findOneById($id);
+      if (!$user) {
+        return $this->responseNotFound(trans('messages.user.not_found'));
+      }
+      return $this->responseSuccess(['usuario' => $user]);
   }
 }
