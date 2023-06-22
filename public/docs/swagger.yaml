@@ -35,6 +35,7 @@ paths:
   /usuarios/listar:
     get:
       security:
+        - bearerAuth: []
       tags:
         - Usuários
       summary: Busca os usuários cadastrados
@@ -45,6 +46,7 @@ paths:
           description: Usuários encontrados.
           content:
             application/json:
+              schema:
                 $ref: '#/components/schemas/Usuarios'
         '404':
           description: Usuários não encontrados.
