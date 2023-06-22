@@ -24,7 +24,18 @@ Gere uma nova chave de aplicativo executando o comando `php artisan key:generate
 Execute as migrações do banco de dados para criar as tabelas com o comando `php artisan migrate`
 
 Inicie o servidor com o comando `php artisan serve`
-### Testes
+
+#### observações:
+
+Como existe a autenticação JWT será necessário criar criar e logar com um usuário, ambos os endpoints estão devidamente documentados.
+
+Para usar os endpoints pode-se utilizar uma ferramenta como o Postman.
+
+É necessário informar que a autorização é do tipo JWT Bearer e adicionar um header da seguinte forma:
+
+`Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9`
+
+### Testes de integração
 
 Conforme solicitado, foram criados testes de integração, para roda-los siga os seguintes passos:
 
