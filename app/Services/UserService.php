@@ -97,4 +97,14 @@ class UserService extends BaseService
       }
       return $this->responseSuccess(['usuario' => $user]);
   }
+
+  // Busca e retorna todos os usuários
+  public function findAll()
+  { 
+      $users = $this->userRepository->findAll();
+      if (!$users) {
+        return $this->responseNotFound(trans('messages.user.none_found'));
+      }
+      return $this->responseSuccess(['usuarios' => $users]);
+  }
 }

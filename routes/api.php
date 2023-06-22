@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->group(function () {
     Route::group(['prefix' => 'usuarios'], function () {
         Route::get('/carregar/{id}', [UserController::class, 'carregar']);
+        Route::get('/listar', [UserController::class, 'listar']);
     });
 
 });

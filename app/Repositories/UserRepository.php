@@ -28,4 +28,11 @@ class UserRepository extends BaseRepository
             ->where('id', $id)
             ->first();
     }
+
+    public function findAll()
+    {
+        return $this->model
+            ->select('*')
+            ->get();
+    }
 }

@@ -8,6 +8,7 @@ return [
     ],
     'user' => [
         'not_found' => 'Usuário não encontrado.',
-        'edited' => 'Usuário alterado com sucesso.'
+        'edited' => 'Usuário alterado com sucesso.',
+        'none_found' => 'Não foi possivel localizar nenhum usuário.'
     ]
 ];

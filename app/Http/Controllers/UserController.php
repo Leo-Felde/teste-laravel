@@ -13,4 +13,9 @@ class UserController extends Controller
   {
       return $userService->findOne($id);
   }
+
+  public function listar(Request $request, UserService $userService)
+  {
+      return $userService->findAll();
+  }
 }
