@@ -32,6 +32,7 @@ paths:
           description: Usuário não encontrado.
         '500':
           description: Erro interno do servidor. Ocorreu um problema no processamento da solicitação.
+
   /usuarios/listar:
     get:
       security:
@@ -50,6 +51,76 @@ paths:
                 $ref: '#/components/schemas/Usuarios'
         '404':
           description: Usuários não encontrados.
+        '500':
+          description: Erro interno do servidor. Ocorreu um problema no processamento da solicitação.
+
+  /auth/register:
+    post:
+      tags:
+        - Autenticação
+      summary: Registrar um novo usuário
+      description: Cria um novo usuário com os dados fornecidos
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              example:
+                name: "Leo"
+                email: "leonardo3@email.com"
+                password: "senha123"
+      responses:
+        '200':
+          description: Usuário registrado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '500':
+          description: Erro interno do servidor. Ocorreu um problema no processamento da solicitação.
+
+  /auth/login:
+    post:
+      tags:
+        - Autenticação
+      summary: Autenticar um usuário
+      description: Verifica as credenciais do usuário e retorna seus dados e token de acesso
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              example:
+                email: "email@example.com"
+                password: "senha123"
+      responses:
+        '200':
+          description: Usuário autenticado com sucesso.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  usuario:
+                    $ref: '#/components/schemas/Usuario'
+        '401':
+          description: Credenciais inválidas. O email ou a senha fornecidos estão incorretos.
         '500':
           description: Erro interno do servidor. Ocorreu um problema no processamento da solicitação.
 
@@ -82,26 +153,7 @@ components:
         usuarios:
           type: array
           items:
-            type: object
-            properties:
-              id:
-                type: integer
-                example: 10
-              name:
-                type: string
-                example: 'Daniel'
-              email:
-                type: string
-                example: 'EmailDoDaniel@gmail.com'
-              email_verified_at:
-                type: string
-                example: '2023-06-22T16:14:24.000000Z'
-              created_at:
-                type: string
-                example: '2023-06-22T16:14:24.000000Z'
-              updated_at:
-                type: string
-                example: '2023-06-22T16:14:24.000000Z'
+            $ref: '#/components/schemas/Usuario'
   securitySchemes:
     bearerAuth:
       type: http
