@@ -1,0 +1,107 @@
+openapi: 3.0.3
+info:
+  title: Documentação dos endpoints do teste situacional
+  version: '1.0'
+
+paths:
+  /usuarios/carregar/{idUsuario}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Usuários
+      summary: Busca um usuário com base no identificador
+      description: Retorna um único usuário correspondente ao Id
+      operationId: getUserById
+      parameters:
+        - name: idUsuario
+          in: path
+          description: ID do usuário a ser retornado
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Usuário encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+        '404':
+          description: Usuário não encontrado.
+        '500':
+          description: Erro interno do servidor. Ocorreu um problema no processamento da solicitação.
+  /usuarios/listar:
+    get:
+      security:
+      tags:
+        - Usuários
+      summary: Busca os usuários cadastrados
+      description: Retorna um array com os usuários encontrados
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: Usuários encontrados.
+          content:
+            application/json:
+                $ref: '#/components/schemas/Usuarios'
+        '404':
+          description: Usuários não encontrados.
+        '500':
+          description: Erro interno do servidor. Ocorreu um problema no processamento da solicitação.
+
+components:
+  schemas:
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 10
+        name:
+          type: string
+          example: 'Daniel'
+        email:
+          type: string
+          example: 'EmailDoDaniel@gmail.com'
+        email_verified_at:
+          type: string
+          example: '2023-06-22T16:14:24.000000Z'
+        created_at:
+          type: string
+          example: '2023-06-22T16:14:24.000000Z'
+        updated_at:
+          type: string
+          example: '2023-06-22T16:14:24.000000Z'
+    Usuarios:
+      type: object
+      properties:
+        usuarios:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 10
+              name:
+                type: string
+                example: 'Daniel'
+              email:
+                type: string
+                example: 'EmailDoDaniel@gmail.com'
+              email_verified_at:
+                type: string
+                example: '2023-06-22T16:14:24.000000Z'
+              created_at:
+                type: string
+                example: '2023-06-22T16:14:24.000000Z'
+              updated_at:
+                type: string
+                example: '2023-06-22T16:14:24.000000Z'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
