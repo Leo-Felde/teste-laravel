@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -19,12 +20,29 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Register the exception handling callbacks for the application.
+     * Render an exception into an HTTP response.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Throwable $exception
+     * @return \Illuminate\Http\JsonResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function register(): void
+    public function render($request, Throwable $exception)
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        if ($request->expectsJson() || $request->is('api/*')) {
+            // Handle API-specific exceptions
+            if ($exception instanceof HttpResponseException) {
+                return $exception->getResponse();
+            }
+
+            // Handle validation errors
+            if ($exception instanceof \Illuminate\Validation\ValidationException) {
+                return response()->json(['errors' => $exception->errors()], 422);
+            }
+
+            // Handle other exceptions
+            return response()->json(['message' => $exception->getMessage()], 500);
+        }
+
+        return parent::render($request, $exception);
     }
 }
